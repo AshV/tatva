@@ -1,0 +1,57 @@
+---
+/**
+ * मनोभाव पृष्ठ (Mood Feed) — तत्त्व
+ */
+import { BaseLayout, ReelFeed, getLocalizedMoodMeta, allMoods } from 'wiz-theme';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allQuotes = await getCollection('quotes');
+  const quotesData = allQuotes.map((q) => q.data);
+
+  return allMoods.map((mood) => {
+    const matched = quotesData.filter((q) => q.mood === mood);
+    const remaining = quotesData.filter((q) => q.mood !== mood);
+    const { label, emoji } = getLocalizedMoodMeta(mood, 'hi');
+    return {
+      params: { slug: mood },
+      props: {
+        quotes: [...matched, ...remaining.slice(0, 15)],
+        matchedCount: matched.length,
+        moodLabel: label,
+        moodEmoji: emoji,
+      },
+    };
+  });
+};
+
+interface Props {
+  quotes: any[];
+  matchedCount: number;
+  moodLabel: string;
+  moodEmoji: string;
+}
+
+const { slug } = Astro.params;
+const { quotes, matchedCount, moodLabel, moodEmoji } = Astro.props;
+---
+<BaseLayout
+  title={`${moodEmoji} ${moodLabel} विचार — तत्त्व`}
+  description={`${moodLabel} मनोभाव से जुड़े प्रेरक और दार्शनिक विचार एवं सूक्तियां।`}
+  lang="hi"
+  keywords={[`${moodLabel} विचार`, moodLabel, 'तत्त्व', 'मनोभाव', 'ध्यान', 'शाश्वत चिंतन']}
+  breadcrumbs={[
+    { name: 'मनोभाव', url: '/tatva/' },
+    { name: `${moodEmoji} ${moodLabel}`, url: `/tatva/mood/${slug}/` },
+  ]}
+>
+  <ReelFeed
+    quotes={quotes}
+    matchedCount={matchedCount}
+    filterLabel={`${moodEmoji} ${moodLabel} चिंतन`}
+    feedTitle={`${moodEmoji} ${moodLabel}`}
+    feedType="mood"
+    lang="hi"
+  />
+</BaseLayout>

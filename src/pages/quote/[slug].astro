@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import { BaseLayout, ReelFeed, slugifyQuote } from 'wiz-theme';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allQuotes = await getCollection('quotes');
+  const quotesData = allQuotes.map(q => q.data);
+
+  const quotesByCategory: Record<string, any[]> = {};
+  const quotesByMood: Record<string, any[]> = {};
+
+  for (const q of quotesData) {
+    if (!quotesByCategory[q.categorySlug]) quotesByCategory[q.categorySlug] = [];
+    quotesByCategory[q.categorySlug].push(q);
+    if (!quotesByMood[q.mood]) quotesByMood[q.mood] = [];
+    quotesByMood[q.mood].push(q);
+  }
+
+  return quotesData.map((quote) => {
+    const textSlug = slugifyQuote(quote.content);
+    const sameCat = quotesByCategory[quote.categorySlug] || [];
+    const sameMood = quotesByMood[quote.mood] || [];
+    const buffer = [...sameCat, ...sameMood].filter((q) => q.id !== quote.id).slice(0, 3);
+
+    return {
+      params: { slug: textSlug },
+      props: {
+        targetQuote: quote,
+        feedQuotes: [quote, ...buffer],
+      },
+    };
+  });
+};
+
+interface Props {
+  targetQuote: any;
+  feedQuotes: any[];
+}
+
+const { targetQuote, feedQuotes } = Astro.props;
+const { content, author, authorSlug, category, tags } = targetQuote;
+
+const textSlug = slugifyQuote(content);
+const canonicalUrl = `/tatva/quote/${textSlug}/`;
+
+const title = `“${content}” — ${author} | तत्त्व`;
+const description = `“${content}” — ${author} द्वारा ${category} पर अमर विचार। तत्त्व पर पढ़िए।`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Quotation',
+  headline: `${author} का विचार`,
+  text: content,
+  inLanguage: 'hi',
+  creator: {
+    '@type': 'Person',
+    name: author,
+  },
+  keywords: tags.join(', '),
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'तत्त्व',
+    url: 'https://www.ashishvishwakarma.com/tatva/',
+  },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang="hi"
+  ogType="article"
+  robots="noindex, follow, max-image-preview:large"
+  keywords={[...tags, author, category, 'तत्त्व विचार', 'सुविचार']}
+  breadcrumbs={[
+    { name: 'विचारक', url: '/tatva/' },
+    { name: author, url: `/tatva/author/${authorSlug}/` },
+    { name: `“${content.slice(0, 30)}...”`, url: canonicalUrl },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <ReelFeed
+    quotes={feedQuotes}
+    feedTitle={`${author} का विचार`}
+    feedType="quote"
+    matchedCount={1}
+    lang="hi"
+  />
+</BaseLayout>

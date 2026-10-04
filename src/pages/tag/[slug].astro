@@ -1,0 +1,64 @@
+---
+/**
+ * टैग पृष्ठ (Tag Feed) — तत्त्व
+ */
+import { BaseLayout, ReelFeed } from 'wiz-theme';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allQuotes = await getCollection('quotes');
+  const quotesData = allQuotes.map((q) => q.data);
+
+  const quotesByTag: Record<string, any[]> = {};
+  for (const q of quotesData) {
+    for (const tag of (q.tags || [])) {
+      if (!quotesByTag[tag]) quotesByTag[tag] = [];
+      quotesByTag[tag].push(q);
+    }
+  }
+
+  const tags = Object.keys(quotesByTag);
+
+  return tags.map((tag) => {
+    const matched = quotesByTag[tag];
+    return {
+      params: { slug: tag },
+      props: {
+        quotes: matched.slice(0, 30),
+        matchedCount: matched.length,
+        tagName: tag,
+      },
+    };
+  });
+};
+
+interface Props {
+  quotes: any[];
+  matchedCount: number;
+  tagName: string;
+}
+
+const { slug } = Astro.params;
+const { quotes, matchedCount, tagName } = Astro.props;
+---
+<BaseLayout
+  title={`#${tagName} विचार — तत्त्व`}
+  description={`#${tagName} से जुड़े प्रेरणादायी विचार और चिंतन, तत्त्व पर पढ़ें।`}
+  lang="hi"
+  robots="noindex, follow"
+  keywords={[`#${tagName}`, `${tagName} विचार`, tagName, 'तत्त्व', 'सुविचार']}
+  breadcrumbs={[
+    { name: 'टैग', url: '/tatva/' },
+    { name: `#${tagName}`, url: `/tatva/tag/${slug}/` },
+  ]}
+>
+  <ReelFeed
+    quotes={quotes}
+    matchedCount={matchedCount}
+    filterLabel={`#${tagName} विचार`}
+    feedTitle={`#${tagName}`}
+    feedType="tag"
+    lang="hi"
+  />
+</BaseLayout>

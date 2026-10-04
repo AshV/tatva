@@ -1,0 +1,54 @@
+---
+/**
+ * तत्त्व — मुख्य प्रवाह (Master Feed)
+ */
+import { BaseLayout, ReelFeed, getDayOfYear } from 'wiz-theme';
+import { getCollection } from 'astro:content';
+import dailyQuotesData from '../../public/daily-quotes.json';
+
+const allQuotes = await getCollection('quotes');
+const CHUNK_SIZE = 200;
+const totalChunks = Math.ceil(allQuotes.length / CHUNK_SIZE);
+const dayOfYear = getDayOfYear(new Date());
+
+// Find today's daily reflection quote from curated daily-quotes
+const todayDailyEntry =
+  dailyQuotesData.find((dq) => dq.day === dayOfYear) ||
+  dailyQuotesData[dayOfYear % dailyQuotesData.length] ||
+  dailyQuotesData[0];
+
+const todayQuote =
+  allQuotes.find((q) => q.data.id === todayDailyEntry.id || q.id === todayDailyEntry.id)?.data ||
+  allQuotes[dayOfYear % allQuotes.length]?.data;
+
+// Filter out today's quote from the remaining pool
+const otherQuotes = allQuotes
+  .filter((q) => !todayQuote || (q.data.id !== todayQuote.id && q.id !== todayQuote.id))
+  .map((q) => q.data);
+
+// Rotate pool deterministically by day
+const startIndex = (dayOfYear * 17) % (otherQuotes.length || 1);
+const rotatedQuotes = [
+  ...otherQuotes.slice(startIndex),
+  ...otherQuotes.slice(0, startIndex),
+];
+
+const quotes = todayQuote
+  ? [todayQuote, ...rotatedQuotes.slice(0, 11)]
+  : rotatedQuotes.slice(0, 12);
+---
+<BaseLayout
+  siteName="तत्त्व"
+  subtitle="शाश्वत विचार एवं चिंतन"
+  description="संत कबीर, स्वामी विवेकानंद, गौतम बुद्ध और भारतीय दर्शन के कालजयी विचार, दोहे और अनमोल सूक्तियां।"
+  lang="hi"
+>
+  <ReelFeed
+    quotes={quotes}
+    feedTitle="तत्त्व"
+    feedSubtitle="शाश्वत विचार एवं चिंतन"
+    feedType="master"
+    lang="hi"
+    totalChunks={totalChunks}
+  />
+</BaseLayout>

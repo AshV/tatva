@@ -1,0 +1,72 @@
+---
+import { BaseLayout } from 'wiz-theme';
+import { getCollection } from 'astro:content';
+
+const allQuotes = await getCollection('quotes');
+const totalQuotes = allQuotes.length;
+const base = '/tatva';
+---
+
+<BaseLayout
+  title="पृष्ठ नहीं मिला (404) | तत्त्व"
+  description="शायद आप जिस विचार की खोज में हैं, वह किसी अन्य मार्ग पर स्थित है।"
+  lang="hi"
+  robots="noindex, nofollow"
+>
+  <script is:inline define:vars={{ totalQuotes, base }}>
+    (function () {
+      try {
+        const rawPath = window.location.pathname.replace(/\/+$/, '');
+        const match = rawPath.match(/^(?:\/tatva)?\/(?:quote\/)?q?(\d+)$/i);
+
+        if (match && match[1]) {
+          const num = parseInt(match[1], 10);
+          if (num >= 1 && num <= totalQuotes) {
+            document.documentElement.classList.add('is-resolving-quote');
+            const paddedId = 'q' + String(num).padStart(num >= 1000 ? 4 : 3, '0');
+            window.location.replace(`${base}/#${paddedId}`);
+          }
+        }
+      } catch (err) {
+        console.warn('[Tatva 404 Resolver] Error:', err);
+      }
+    })();
+  </script>
+
+  <div class="relative min-h-[100dvh] w-full flex flex-col items-center justify-center p-4 sm:p-6 select-none z-10">
+    <div
+      id="error-404-container"
+      class="flex flex-col items-center justify-center text-center max-w-xl w-full p-6 sm:p-10 rounded-3xl bg-black/40 backdrop-blur-3xl border border-white/10 shadow-[0_20px_70px_rgba(0,0,0,0.8)]"
+    >
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-6 shadow-sm">
+        <span>✦</span>
+        <span>पृष्ठ अनुपलब्ध</span>
+        <span>✦</span>
+      </div>
+
+      <div class="relative my-2 select-none pointer-events-none">
+        <span class="text-7xl sm:text-9xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white/30 via-white/10 to-transparent">
+          404
+        </span>
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-3">
+        यह मार्ग अभी तक लिखा नहीं गया है
+      </h1>
+
+      <p class="text-sm sm:text-base text-white/70 max-w-md mb-8 leading-relaxed font-light">
+        समय के प्रवाह में कुछ पृष्ठ अप्रकट रह जाते हैं। आप मुख्य प्रवाह में लौटकर पुनः शाश्वत विचारों के दर्शन कर सकते हैं।
+      </p>
+
+      <a
+        href={`${base}/`}
+        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-amber-300 text-neutral-950 hover:bg-amber-200 transition-all font-semibold text-sm shadow-lg shadow-amber-400/20 active:scale-95"
+      >
+        <span>मुख्य पृष्ठ पर लौटें</span>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</BaseLayout>

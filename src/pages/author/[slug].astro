@@ -1,0 +1,131 @@
+---
+/**
+ * लेखक पृष्ठ (Author Hub Page) — तत्त्व
+ */
+import { BaseLayout, ReelFeed } from 'wiz-theme';
+import { getCollection } from 'astro:content';
+import { getAuthorProfile } from '../../data/authorProfiles';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allQuotes = await getCollection('quotes');
+  const quotesData = allQuotes.map((q) => q.data);
+  const slugs = [...new Set(quotesData.map((q) => q.authorSlug))];
+
+  return slugs.map((slug) => {
+    const matched = quotesData.filter((q) => q.authorSlug === slug);
+    const remaining = quotesData.filter((q) => q.authorSlug !== slug);
+    const authorName = matched[0]?.author || slug;
+    return {
+      params: { slug },
+      props: {
+        quotes: [...matched, ...remaining.slice(0, 15)],
+        matchedCount: matched.length,
+        authorName,
+      },
+    };
+  });
+};
+
+interface Props {
+  quotes: any[];
+  matchedCount: number;
+  authorName: string;
+}
+
+const { slug } = Astro.params;
+const { quotes, matchedCount, authorName } = Astro.props;
+
+const profile = getAuthorProfile(slug!, authorName, 'hi');
+
+const pageTitle = `${profile.name} के विचार एवं दर्शन — तत्त्व`;
+const pageDescription = `${profile.name} (${profile.era}), ${profile.tradition} के ${matchedCount}+ अनमोल विचार, दर्शन और चिंतन।`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: pageTitle,
+  description: profile.summary,
+  url: `https://www.ashishvishwakarma.com/tatva/author/${slug}/`,
+  inLanguage: 'hi',
+  about: {
+    '@type': 'Person',
+    name: profile.name,
+    alternateName: profile.longName !== profile.name ? profile.longName : undefined,
+    description: profile.bio,
+    sameAs: profile.wikipediaUrl,
+    image: profile.photo ? `https://www.ashishvishwakarma.com${profile.photo}` : undefined,
+    knowsAbout: [profile.tradition, ...profile.pillars.map((p) => p.concept)],
+  },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: matchedCount,
+    itemListElement: quotes.slice(0, 30).map((q, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': 'Quotation',
+        text: q.content,
+        creator: {
+          '@type': 'Person',
+          name: profile.name,
+        },
+      },
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  lang="hi"
+  robots="index, follow, max-image-preview:large"
+  keywords={[
+    `${profile.name} के विचार`,
+    `${profile.name} दोहे`,
+    profile.tradition,
+    ...profile.pillars.map((p) => p.concept),
+    'तत्त्व',
+    'सुविचार',
+    'शाश्वत दर्शन',
+  ]}
+  breadcrumbs={[
+    { name: 'विचारक', url: '/tatva/' },
+    { name: profile.name, url: `/tatva/author/${slug}/` },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <!-- Semantic Hidden-to-Viewers Fallback Block for SEO -->
+  <article class="sr-only" itemscope itemtype="https://schema.org/Person">
+    <h1 itemprop="name">{profile.name}</h1>
+    <p><strong>ऐतिहासिक काल:</strong> {profile.era}</p>
+    <p><strong>दार्शनिक परंपरा:</strong> {profile.tradition}</p>
+    <div itemprop="description">
+      <p>{profile.bio}</p>
+      <h2>दार्शनिक सिद्धांत</h2>
+      <ul>
+        {profile.pillars.map((p) => (
+          <li><strong>{p.concept}:</strong> {p.description}</li>
+        ))}
+      </ul>
+      <h2>प्रमुख रचनाएं व संदर्भ</h2>
+      <ul>
+        {profile.keyWorks.map((w) => (
+          <li><strong>{w.title}:</strong> {w.description}</li>
+        ))}
+      </ul>
+      <p>{profile.whyTimeless}</p>
+    </div>
+  </article>
+
+  <ReelFeed
+    quotes={quotes}
+    matchedCount={matchedCount}
+    filterLabel={`${profile.name} के विचार`}
+    feedTitle={`✏️ ${profile.shortName || profile.name}`}
+    feedType="author"
+    lang="hi"
+  />
+</BaseLayout>

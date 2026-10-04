@@ -1,0 +1,232 @@
+---
+/**
+ * श्रेणी पृष्ठ (Category Hub Page) — तत्त्व
+ */
+import { BaseLayout, ReelFeed } from 'wiz-theme';
+import { getCollection } from 'astro:content';
+import { getCategoryProfile } from '../../data/categoryProfiles';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const allQuotes = await getCollection('quotes');
+  const quotesData = allQuotes.map((q) => q.data);
+  const slugs = [...new Set(quotesData.map((q) => q.categorySlug))];
+
+  return slugs.map((slug) => {
+    const matched = quotesData.filter((q) => q.categorySlug === slug);
+    const remaining = quotesData.filter((q) => q.categorySlug !== slug);
+    const categoryName = matched[0]?.category || slug;
+    return {
+      params: { slug },
+      props: {
+        quotes: [...matched, ...remaining.slice(0, 15)],
+        matchedCount: matched.length,
+        categoryName,
+      },
+    };
+  });
+};
+
+interface Props {
+  quotes: any[];
+  matchedCount: number;
+  categoryName: string;
+}
+
+const { slug } = Astro.params;
+const { quotes, matchedCount, categoryName } = Astro.props;
+
+const profile = getCategoryProfile(slug!, categoryName);
+
+const pageTitle = `${profile.name} — तत्त्व विचार एवं दर्शन`;
+const pageDescription = `${profile.name} पर ${matchedCount}+ कालजयी विचार, सूक्तियां और दार्शनिक चिंतन। ${profile.summary}`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: pageTitle,
+  description: profile.summary,
+  url: `https://www.ashishvishwakarma.com/tatva/category/${slug}/`,
+  inLanguage: 'hi',
+  about: {
+    '@type': 'Thing',
+    name: profile.name,
+    description: profile.essay,
+  },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: matchedCount,
+    itemListElement: quotes.slice(0, 30).map((q, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': 'Quotation',
+        text: q.content,
+        creator: {
+          '@type': 'Person',
+          name: q.author,
+        },
+      },
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  lang="hi"
+  robots="index, follow, max-image-preview:large"
+  keywords={[
+    `${profile.name} विचार`,
+    `${profile.name} कोट्स`,
+    ...profile.themes,
+    'तत्त्व',
+    'सुविचार',
+    'भारतीय दर्शन',
+  ]}
+  breadcrumbs={[
+    { name: 'श्रेणियां', url: '/tatva/' },
+    { name: profile.name, url: `/tatva/category/${slug}/` },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <!-- Category Context Pill Button -->
+  <button
+    id="category-context-trigger"
+    type="button"
+    class="fixed top-3.5 right-28 z-40 px-4 py-2 rounded-full glass border border-white/20 text-white/90 hover:text-white hover:border-amber-300/40 text-xs font-medium tracking-wide transition-all duration-300 flex items-center gap-2 shadow-lg backdrop-blur-md cursor-pointer group"
+    aria-label={`${profile.name} का दार्शनिक परिचय पढ़ें`}
+    title={`${profile.name} का परिचय`}
+  >
+    <svg class="w-3.5 h-3.5 text-amber-300 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+    <span class="hidden sm:inline">परिचय</span>
+    <span>{profile.name}</span>
+  </button>
+
+  <!-- Category Modal -->
+  <div
+    id="category-context-modal"
+    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4 sm:p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="category-modal-title"
+  >
+    <div
+      class="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl bg-neutral-900/90 border border-white/15 p-6 sm:p-8 shadow-2xl text-white scrollbar-thin"
+    >
+      <button
+        id="category-context-close"
+        type="button"
+        class="absolute top-5 right-5 p-2 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+        aria-label="बंद करें"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <header class="mt-1 mb-6 pr-10">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs uppercase tracking-widest text-amber-300 font-semibold px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/20">
+            तत्त्व श्रेणी
+          </span>
+          <span class="text-xs text-white/50">&bull;</span>
+          <span class="text-xs text-white/70 font-medium">{matchedCount} विचार</span>
+        </div>
+        <h2 id="category-modal-title" class="text-2xl sm:text-3xl font-serif font-bold text-white tracking-wide">
+          {profile.name}
+        </h2>
+      </header>
+
+      <section class="mb-6 text-sm sm:text-base text-white/80 leading-relaxed space-y-3 font-sans">
+        <p>{profile.essay}</p>
+      </section>
+
+      {profile.themes.length > 0 && (
+        <section class="pt-4 border-t border-white/10">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-amber-300/90 mb-3">
+            मुख्य चिंतन विषय
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {profile.themes.map((theme) => (
+              <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-white/80">
+                {theme}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </div>
+
+  <article class="sr-only">
+    <h1>{profile.name} विचार व दर्शन</h1>
+    <p>{profile.summary}</p>
+    <div>
+      <h2>{profile.name} का सार</h2>
+      <p>{profile.essay}</p>
+      <h2>प्रमुख विषय</h2>
+      <ul>
+        {profile.themes.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    </div>
+  </article>
+
+  <ReelFeed
+    quotes={quotes}
+    matchedCount={matchedCount}
+    filterLabel={`${profile.name} विचार`}
+    feedTitle={profile.name}
+    feedType="category"
+    lang="hi"
+  />
+
+  <script is:inline>
+    function setupCategoryModal() {
+      const trigger = document.getElementById('category-context-trigger');
+      const modal = document.getElementById('category-context-modal');
+      const closeBtn = document.getElementById('category-context-close');
+
+      if (!trigger || !modal || !closeBtn) return;
+
+      function openModal() {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+      }
+
+      trigger.onclick = openModal;
+      closeBtn.onclick = closeModal;
+
+      modal.onclick = (e) => {
+        if (e.target === modal) closeModal();
+      };
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupCategoryModal);
+    } else {
+      setupCategoryModal();
+    }
+    document.addEventListener('astro:page-load', setupCategoryModal);
+  </script>
+</BaseLayout>

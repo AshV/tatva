@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "तत्त्व — शाश्वत विचार",
+  "short_name": "तत्त्व",
+  "description": "संत कबीर, स्वामी विवेकानंद, गौतम बुद्ध और भारतीय दर्शन के कालजयी विचार, दोहे और अनमोल सूक्तियां।",
+  "start_url": "/tatva/",
+  "scope": "/tatva/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "categories": ["lifestyle", "education", "books"],
+  "lang": "hi-IN",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/tatva/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/tatva/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/tatva/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/tatva/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/tatva/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "दैनिक चिंतन",
+      "short_name": "चिंतन",
+      "description": "आज का अमर विचार एवं प्रेरणा",
+      "url": "/tatva/",
+      "icons": [{ "src": "/tatva/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "विचारक व विषय",
+      "short_name": "अन्वेषण",
+      "description": "भारतीय दार्शनिकों और संतों के विचार खोजें",
+      "url": "/tatva/#explore",
+      "icons": [{ "src": "/tatva/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
