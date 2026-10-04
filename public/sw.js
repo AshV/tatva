@@ -1,12 +1,12 @@
-const CACHE_NAME = 'wisdom-v8';
+const CACHE_NAME = 'tatva-v1';
 const PRECACHE_ASSETS = [
-  '/wisdom/',
-  '/wisdom/manifest.webmanifest',
-  '/wisdom/favicon.png',
-  '/wisdom/daily-quotes.json',
-  '/wisdom/icons/icon-192.png',
-  '/wisdom/icons/icon-512.png',
-  '/wisdom/icons/apple-touch-icon.png',
+  '/tatva/',
+  '/tatva/manifest.webmanifest',
+  '/tatva/favicon.png',
+  '/tatva/daily-quotes.json',
+  '/tatva/icons/icon-192.png',
+  '/tatva/icons/icon-512.png',
+  '/tatva/icons/apple-touch-icon.png',
 ];
 
 // Install: pre-cache critical shell assets
@@ -58,11 +58,11 @@ self.addEventListener('fetch', (event) => {
           if (cached) return cached;
 
           // Fallback to cached root sanctuary
-          const rootFallback = await caches.match('/wisdom/');
+          const rootFallback = await caches.match('/tatva/');
           if (rootFallback) return rootFallback;
 
-          return new Response('Offline — Wisdom Sanctuary available once online.', {
-            headers: { 'Content-Type': 'text/plain' },
+          return new Response('Offline — तत्त्व विचार पुनः ऑनलाइन आने पर उपलब्ध होंगे।', {
+            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
           });
         })
     );
@@ -73,17 +73,16 @@ self.addEventListener('fetch', (event) => {
   const isStaticAsset =
     url.origin.includes('fonts.googleapis.com') ||
     url.origin.includes('fonts.gstatic.com') ||
-    url.pathname.startsWith('/wisdom/_astro/') ||
-    url.pathname.startsWith('/wisdom/icons/') ||
-    url.pathname.startsWith('/wisdom/media/') ||
-    url.pathname.startsWith('/wisdom/api/') ||
+    url.pathname.startsWith('/tatva/_astro/') ||
+    url.pathname.startsWith('/tatva/icons/') ||
+    url.pathname.startsWith('/tatva/media/') ||
+    url.pathname.startsWith('/tatva/api/') ||
     url.pathname.endsWith('daily-quotes.json');
 
   if (isStaticAsset) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
         if (cachedResponse) {
-          // Return cache, but revalidate in background
           fetch(request)
             .then((networkResponse) => {
               if (networkResponse && networkResponse.status === 200) {
@@ -119,4 +118,3 @@ self.addEventListener('fetch', (event) => {
       .catch(() => caches.match(request))
   );
 });
-
