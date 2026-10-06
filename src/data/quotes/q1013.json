@@ -1,0 +1,23 @@
+{
+  "id": "q1013",
+  "content": "मैं केवल एक ही बात जानता हूँ, और वह यह कि मैं कुछ नहीं जानता।",
+  "author": "सुकरात",
+  "authorSlug": "socrates",
+  "category": "शास्त्रीय यूनानी दर्शन",
+  "categorySlug": "darshan",
+  "mood": "philosophical",
+  "tags": [
+    "विनम्रता",
+    "ज्ञान",
+    "सुकराती अज्ञान",
+    "सुकरात"
+  ],
+  "duration": 18,
+  "sourceWork": "द अपोलॉजी (The Apology, Plato)",
+  "explanation": "सुकरात की यह 'सुकराती विडंबना' (Socratic Paradox) सच्चे ज्ञान की सर्वोच्च विनम्रता है। जो यह मानता है कि वह सब कुछ जानता है, उसके लिए सीखने के सारे द्वार बंद हो जाते हैं; अपनी सीमाओं को स्वीकार करना ही ज्ञान का पहला कदम है।",
+  "practicalInsight": "बौद्धिक अहंकार से बचें; हर परिस्थिति और हर व्यक्ति से कुछ नया सीखने की विनम्रता बनाए रखें।",
+  "reflectionPrompt": "क्या आप अपनी अज्ञानता को स्वीकार करने और नई बातें सीखने के लिए तैयार रहते हैं?",
+  "sourcedFrom": "Plato's Apology, 21d",
+  "isParaphrased": true,
+  "originalQuote": "I know that I am intelligent, because I know that I know nothing."
+}

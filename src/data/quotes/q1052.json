@@ -1,0 +1,23 @@
+{
+  "id": "q1052",
+  "content": "बिना सोचे-समझे सीखना व्यर्थ का श्रम है; और बिना सीखे केवल सोचते रहना अत्यंत खतरनाक है।",
+  "author": "कन्फ्यूशियस",
+  "authorSlug": "confucius",
+  "category": "कन्फ्यूशीवाद",
+  "categorySlug": "darshan",
+  "mood": "philosophical",
+  "tags": [
+    "शिक्षा",
+    "चिंतन",
+    "संतुलन",
+    "कन्फ्यूशियस"
+  ],
+  "duration": 18,
+  "sourceWork": "एनालेक्ट्स (The Analects)",
+  "explanation": "कन्फ्यूशियस अध्ययन (अधिगम) और चिंतन (विवेक) के संतुलन का नियम बताते हैं। केवल सूचनाएं रटना बिना चिंतन के व्यर्थ है, और बिना ज्ञान व तथ्यों के केवल काल्पनिक विचार करते रहना भटकाव पैदा करता है।",
+  "practicalInsight": "जो कुछ भी पढ़ें या सीखें, उस पर गहराई से मनन और व्यावहारिक चिंतन अवश्य करें।",
+  "reflectionPrompt": "क्या आप सीखी हुई बातों पर गहराई से विचार करके उन्हें आत्मसात करते हैं?",
+  "sourcedFrom": "The Analects, Book II, 15",
+  "isParaphrased": true,
+  "originalQuote": "Learning without thought is labor lost; thought without learning is perilous."
+}

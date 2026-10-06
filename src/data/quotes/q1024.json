@@ -1,0 +1,23 @@
+{
+  "id": "q1024",
+  "content": "किसी विचार को स्वीकार किए बिना भी उस पर गंभीरता से विचार करने में सक्षम होना ही एक शिक्षित मस्तिष्क का लक्षण है।",
+  "author": "अरस्तू",
+  "authorSlug": "aristotle",
+  "category": "शास्त्रीय यूनानी दर्शन",
+  "categorySlug": "darshan",
+  "mood": "philosophical",
+  "tags": [
+    "खुला दृष्टिकोण",
+    "बौद्धिक परिपक्वता",
+    "सहिष्णुता",
+    "अरस्तू"
+  ],
+  "duration": 18,
+  "sourceWork": "अरस्तू विमर्श",
+  "explanation": "बौद्धिक परिपक्वता का यह सर्वोच्च मापदंड है। एक प्रबुद्ध व्यक्ति विरोधी विचारों को तुरंत खारिज किए बिना या उनसे उत्तेजित हुए बिना निष्पक्ष रूप से उनका विश्लेषण कर सकता है। पूर्वाग्रह से मुक्त होना ही सच्ची शिक्षा है।",
+  "practicalInsight": "दूसरों के विरोधी विचारों को बिना उत्तेजित हुए शांतिपूर्वक सुनें और विवेक से उनका विश्लेषण करें।",
+  "reflectionPrompt": "क्या आप अपनी मान्यताओं के विपरीत विचारों को धैर्यपूर्वक सुन और समझ पाते हैं?",
+  "sourcedFrom": "Aristotle Metaphysics",
+  "isParaphrased": true,
+  "originalQuote": "It is the mark of an educated mind to be able to entertain a thought without accepting it."
+}
