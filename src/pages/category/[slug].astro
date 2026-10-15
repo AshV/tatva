@@ -2,7 +2,7 @@
 /**
  * श्रेणी पृष्ठ (Category Hub Page) — तत्त्व
  */
-import { BaseLayout, ReelFeed } from 'wiz-theme';
+import { BaseLayout, ReelFeed, resolvePath, resolveCanonicalUrl } from 'wisdom';
 import { getCollection } from 'astro:content';
 import { getCategoryProfile } from '../../data/categoryProfiles';
 import type { GetStaticPaths } from 'astro';
@@ -46,7 +46,7 @@ const structuredData = {
   '@type': 'CollectionPage',
   name: pageTitle,
   description: profile.summary,
-  url: `https://www.ashishvishwakarma.com/tatva/category/${slug}/`,
+  url: resolveCanonicalUrl(`category/${slug}/`, Astro.site?.origin),
   inLanguage: 'hi',
   about: {
     '@type': 'Thing',
@@ -86,8 +86,8 @@ const structuredData = {
     'भारतीय दर्शन',
   ]}
   breadcrumbs={[
-    { name: 'श्रेणियां', url: '/tatva/' },
-    { name: profile.name, url: `/tatva/category/${slug}/` },
+    { name: 'श्रेणियां', url: resolvePath('category/') },
+    { name: profile.name, url: resolvePath(`category/${slug}/`) },
   ]}
 >
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

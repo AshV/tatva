@@ -1,16 +1,23 @@
-const CACHE_NAME = 'tatva-v1';
+import type { APIRoute } from "astro";
+
+export const GET: APIRoute = () => {
+  const base = import.meta.env.BASE_URL;
+  const cleanBase = base.replace(/\/+$/, "");
+  const prefix = cleanBase ? `${cleanBase}/` : "/";
+  const cacheName = "tatva-v1";
+
+  const script = `const CACHE_NAME = "${cacheName}";
 const PRECACHE_ASSETS = [
-  '/tatva/',
-  '/tatva/manifest.webmanifest',
-  '/tatva/favicon.png',
-  '/tatva/daily-quotes.json',
-  '/tatva/icons/icon-192.png',
-  '/tatva/icons/icon-512.png',
-  '/tatva/icons/apple-touch-icon.png',
+  "${prefix}",
+  "${prefix}manifest.webmanifest",
+  "${prefix}favicon.png",
+  "${prefix}daily-quotes.json",
+  "${prefix}icons/icon-192.png",
+  "${prefix}icons/icon-512.png",
+  "${prefix}icons/apple-touch-icon.png",
 ];
 
-// Install: pre-cache critical shell assets
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_ASSETS);
@@ -18,8 +25,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: clean up old cache versions and claim clients
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -33,16 +39,13 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: intelligent caching strategy
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Only handle GET requests
-  if (request.method !== 'GET') return;
+  if (request.method !== "GET") return;
 
-  // 1. Navigation requests (HTML pages)
-  if (request.mode === 'navigate') {
+  if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
         .then((response) => {
@@ -53,31 +56,28 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(async () => {
-          // Try cached version of requested URL
           const cached = await caches.match(request);
           if (cached) return cached;
 
-          // Fallback to cached root sanctuary
-          const rootFallback = await caches.match('/tatva/');
+          const rootFallback = await caches.match("${prefix}");
           if (rootFallback) return rootFallback;
 
-          return new Response('Offline — तत्त्व विचार पुनः ऑनलाइन आने पर उपलब्ध होंगे।', {
-            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+          return new Response("Offline — Tatva available once online.", {
+            headers: { "Content-Type": "text/plain" },
           });
         })
     );
     return;
   }
 
-  // 2. Google Fonts & Static Assets (_astro bundles, icons, media/authors, audio, daily quotes, API micro-endpoints)
   const isStaticAsset =
-    url.origin.includes('fonts.googleapis.com') ||
-    url.origin.includes('fonts.gstatic.com') ||
-    url.pathname.startsWith('/tatva/_astro/') ||
-    url.pathname.startsWith('/tatva/icons/') ||
-    url.pathname.startsWith('/tatva/media/') ||
-    url.pathname.startsWith('/tatva/api/') ||
-    url.pathname.endsWith('daily-quotes.json');
+    url.origin.includes("fonts.googleapis.com") ||
+    url.origin.includes("fonts.gstatic.com") ||
+    url.pathname.startsWith("${prefix}_astro/") ||
+    url.pathname.startsWith("${prefix}icons/") ||
+    url.pathname.startsWith("${prefix}media/") ||
+    url.pathname.startsWith("${prefix}api/") ||
+    url.pathname.endsWith("daily-quotes.json");
 
   if (isStaticAsset) {
     event.respondWith(
@@ -105,7 +105,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. Default: Network with Cache Fallback
   event.respondWith(
     fetch(request)
       .then((response) => {
@@ -118,3 +117,9 @@ self.addEventListener('fetch', (event) => {
       .catch(() => caches.match(request))
   );
 });
+`;
+
+  return new Response(script, {
+    headers: { "Content-Type": "application/javascript; charset=utf-8" },
+  });
+};

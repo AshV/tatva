@@ -2,7 +2,7 @@
 /**
  * लेखक पृष्ठ (Author Hub Page) — तत्त्व
  */
-import { BaseLayout, ReelFeed } from 'wiz-theme';
+import { BaseLayout, ReelFeed, resolvePath, resolveCanonicalUrl } from 'wisdom';
 import { getCollection } from 'astro:content';
 import { getAuthorProfile } from '../../data/authorProfiles';
 import type { GetStaticPaths } from 'astro';
@@ -46,7 +46,7 @@ const structuredData = {
   '@type': 'CollectionPage',
   name: pageTitle,
   description: profile.summary,
-  url: `https://www.ashishvishwakarma.com/tatva/author/${slug}/`,
+  url: resolveCanonicalUrl(`author/${slug}/`, Astro.site?.origin),
   inLanguage: 'hi',
   about: {
     '@type': 'Person',
@@ -54,7 +54,7 @@ const structuredData = {
     alternateName: profile.longName !== profile.name ? profile.longName : undefined,
     description: profile.bio,
     sameAs: profile.wikipediaUrl,
-    image: profile.photo ? `https://www.ashishvishwakarma.com${profile.photo}` : undefined,
+    image: profile.photo ? (profile.photo.startsWith('http') ? profile.photo : resolveCanonicalUrl(profile.photo.replace(/^\/+/, ''), Astro.site?.origin)) : undefined,
     knowsAbout: [profile.tradition, ...profile.pillars.map((p) => p.concept)],
   },
   mainEntity: {
@@ -91,8 +91,8 @@ const structuredData = {
     'शाश्वत दर्शन',
   ]}
   breadcrumbs={[
-    { name: 'विचारक', url: '/tatva/' },
-    { name: profile.name, url: `/tatva/author/${slug}/` },
+    { name: 'विचारक', url: resolvePath('author/') },
+    { name: profile.name, url: resolvePath(`author/${slug}/`) },
   ]}
 >
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

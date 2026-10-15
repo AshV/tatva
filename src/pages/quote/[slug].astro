@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { BaseLayout, ReelFeed, slugifyQuote } from 'wiz-theme';
+import { BaseLayout, ReelFeed, slugifyQuote, resolvePath, resolveCanonicalUrl } from 'wisdom';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -42,7 +42,7 @@ const { targetQuote, feedQuotes } = Astro.props;
 const { content, author, authorSlug, category, tags } = targetQuote;
 
 const textSlug = slugifyQuote(content);
-const canonicalUrl = `/tatva/quote/${textSlug}/`;
+const canonicalUrl = resolvePath(`quote/${textSlug}/`);
 
 const title = `“${content}” — ${author} | तत्त्व`;
 const description = `“${content}” — ${author} द्वारा ${category} पर अमर विचार। तत्त्व पर पढ़िए।`;
@@ -61,7 +61,7 @@ const structuredData = {
   isPartOf: {
     '@type': 'WebSite',
     name: 'तत्त्व',
-    url: 'https://www.ashishvishwakarma.com/tatva/',
+    url: resolveCanonicalUrl('', Astro.site?.origin),
   },
 };
 ---
@@ -74,8 +74,8 @@ const structuredData = {
   robots="noindex, follow, max-image-preview:large"
   keywords={[...tags, author, category, 'तत्त्व विचार', 'सुविचार']}
   breadcrumbs={[
-    { name: 'विचारक', url: '/tatva/' },
-    { name: author, url: `/tatva/author/${authorSlug}/` },
+    { name: 'विचारक', url: resolvePath('author/') },
+    { name: author, url: resolvePath(`author/${authorSlug}/`) },
     { name: `“${content.slice(0, 30)}...”`, url: canonicalUrl },
   ]}
 >

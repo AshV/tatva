@@ -1,4 +1,4 @@
-import { getAuthorProfile as getThemeAuthorProfile } from 'wiz-theme';
+import { getAuthorProfile as getThemeAuthorProfile, getBaseUrl } from 'wisdom';
 
 export interface AuthorWork {
   title: string;
@@ -26,7 +26,7 @@ export interface AuthorProfile {
   whyTimeless: string;
 }
 
-export function getAuthorPhotoUrl(slug: string, customPhoto?: string, baseUrl: string = '/tatva'): string {
+export function getAuthorPhotoUrl(slug: string, customPhoto?: string, baseUrl: string = getBaseUrl().replace(/\/$/, '')): string {
   if (customPhoto) return customPhoto;
   const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
   return `${cleanBase}/media/authors/${slug}.webp`;
@@ -40,7 +40,7 @@ export const authorProfiles: Record<string, AuthorProfile> = {
     era: '१५वीं शताब्दी',
     tradition: 'निर्गुण भक्ति एवं रहस्यवाद',
     wikipediaUrl: 'https://hi.wikipedia.org/wiki/कबीर',
-    photo: '/tatva/media/authors/kabir.webp',
+    photo: getAuthorPhotoUrl('kabir'),
     summary: '१५वीं सदी के महान भारतीय रहस्यवादी कवि और संत, जिन्होंने जाति, पाखंड और रूढ़ियों को तोड़कर प्रेम और अंतरात्मा की शुद्धि पर बल दिया।',
     bio: 'संत कबीर दास जी हिंदी साहित्य के भक्तिकाल के निर्गुण काव्यधारा के प्रमुख संत और समाज सुधारक थे। उन्होंने बाह्याडंबरों, अंधविश्वासों और सांप्रदायिक संकीर्णताओं पर तीखा प्रहार किया। उनकी सीधी, साखी और सबद रचनाओं ने प्रेम और ईश्वर के सार्वभौमिक स्वरूप को घर-घर तक पहुँचाया।',
     keyWorks: [
@@ -62,7 +62,7 @@ export const authorProfiles: Record<string, AuthorProfile> = {
     era: '१८६३ – १९०२',
     tradition: 'आधुनिक वेदांत एवं कर्मयोग',
     wikipediaUrl: 'https://hi.wikipedia.org/wiki/स्वामी_विवेकानन्द',
-    photo: '/tatva/media/authors/swami-vivekananda.webp',
+    photo: getAuthorPhotoUrl('swami-vivekananda'),
     summary: 'रामकृष्ण परमहंस के परम शिष्य और आधुनिक भारत के तेजस्वी संन्यासी, जिन्होंने शिकागो में भारतीय संस्कृति की सार्वभौमिक चेतना का उद्घोष किया।',
     bio: 'स्वामी विवेकानंद ने प्राचीन वेदांत को आधुनिक जीवन के साथ जोड़कर एक व्यावहारिक कर्मयोग का स्वरूप दिया। उन्होंने दरिद्र नारायण की सेवा को ही सच्ची ईश्वर पूजा बताया और युवाओं में अदम्य आत्मविश्वास, देशभक्ति और चरित्र निर्माण की ऊर्जा भरी।',
     keyWorks: [
@@ -84,7 +84,7 @@ export const authorProfiles: Record<string, AuthorProfile> = {
     era: 'छठी शताब्दी ई.पू.',
     tradition: 'बौद्ध दर्शन एवं मध्यम मार्ग',
     wikipediaUrl: 'https://hi.wikipedia.org/wiki/गौतम_बुद्ध',
-    photo: '/tatva/media/authors/gautama-buddha.webp',
+    photo: getAuthorPhotoUrl('gautama-buddha'),
     summary: 'बोधगया में बोधिवृक्ष के नीचे सम्यक् संबोधि प्राप्त करने वाले शाक्यमुनि बुद्ध, जिन्होंने चार आर्य सत्य और अष्टांगिक मार्ग का उपदेश दिया।',
     bio: 'सिद्धार्थ गौतम ने राजसी ऐश्वर्य का त्याग कर संसार के दुःख के मूल कारण का अन्वेषण किया। गहन ध्यान और आत्म-निरीक्षण के बाद उन्होंने पाया कि तृष्णा ही दुःख की जड़ है, और मध्यम मार्ग पर चलकर निर्वाण संभव है।',
     keyWorks: [
@@ -106,7 +106,7 @@ export const authorProfiles: Record<string, AuthorProfile> = {
     era: 'चौथी शताब्दी ई.पू.',
     tradition: 'प्राचीन भारतीय नीतिशास्त्र एवं राजनीति',
     wikipediaUrl: 'https://hi.wikipedia.org/wiki/चाणक्य',
-    photo: '/tatva/media/authors/chanakya.webp',
+    photo: getAuthorPhotoUrl('chanakya'),
     summary: 'तक्षशिला के आचार्य, मौर्य साम्राज्य के निर्माता, तथा कूटनीति, अर्थशास्त्र और व्यावहारिक नीति के अद्वितीय मर्मज्ञ।',
     bio: 'आचार्य चाणक्य (कौटिल्य) ने खंड-खंड में बंटे भारत को एक सूत्र में पिरोकर अखंड मौर्य साम्राज्य की नींव रखी। चाणक्य नीति में उन्होंने जीवन, मित्रता, शत्रुता, धन, विद्या और शासन पर ऐसे यथार्थवादी विचार व्यक्त किए हैं जो आज भी प्रासंगिक हैं।',
     keyWorks: [

@@ -18,7 +18,7 @@
     "firebase": "^12.19.0",
     "html-to-image": "^1.11.13",
     "tailwindcss": "^4.3.3",
-    "wiz-theme": "file:../wiz-theme"
+    "wisdom": "file:../wisdom"
   },
   "allowScripts": {
     "esbuild": true

@@ -1,10 +1,10 @@
 ---
-import { BaseLayout } from 'wiz-theme';
-import { getCollection } from 'astro:content';
+import { BaseLayout, getBaseUrl } from "wisdom";
+import { getCollection } from "astro:content";
 
-const allQuotes = await getCollection('quotes');
+const allQuotes = await getCollection("quotes");
 const totalQuotes = allQuotes.length;
-const base = '/tatva';
+const base = getBaseUrl().replace(/\/$/, "");
 ---
 
 <BaseLayout
@@ -16,19 +16,20 @@ const base = '/tatva';
   <script is:inline define:vars={{ totalQuotes, base }}>
     (function () {
       try {
-        const rawPath = window.location.pathname.replace(/\/+$/, '');
-        const match = rawPath.match(/^(?:\/tatva)?\/(?:quote\/)?q?(\d+)$/i);
+        const rawPath = window.location.pathname.replace(/\/+$/, "");
+        const escBase = base ? base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") : "";
+        const match = rawPath.match(new RegExp("^(?:" + escBase + ")?/(?:quote/)?q?(\\d+)$", "i"));
 
         if (match && match[1]) {
           const num = parseInt(match[1], 10);
           if (num >= 1 && num <= totalQuotes) {
-            document.documentElement.classList.add('is-resolving-quote');
-            const paddedId = 'q' + String(num).padStart(num >= 1000 ? 4 : 3, '0');
+            document.documentElement.classList.add("is-resolving-quote");
+            const paddedId = "q" + String(num).padStart(num >= 1000 ? 4 : 3, "0");
             window.location.replace(`${base}/#${paddedId}`);
           }
         }
       } catch (err) {
-        console.warn('[Tatva 404 Resolver] Error:', err);
+        console.warn("[Tatva 404 Resolver] Error:", err);
       }
     })();
   </script>

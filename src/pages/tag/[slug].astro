@@ -2,7 +2,7 @@
 /**
  * टैग पृष्ठ (Tag Feed) — तत्त्व
  */
-import { BaseLayout, ReelFeed } from 'wiz-theme';
+import { BaseLayout, ReelFeed, resolvePath } from 'wisdom';
 import { getCollection } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 
@@ -49,8 +49,8 @@ const { quotes, matchedCount, tagName } = Astro.props;
   robots="noindex, follow"
   keywords={[`#${tagName}`, `${tagName} विचार`, tagName, 'तत्त्व', 'सुविचार']}
   breadcrumbs={[
-    { name: 'टैग', url: '/tatva/' },
-    { name: `#${tagName}`, url: `/tatva/tag/${slug}/` },
+    { name: 'टैग', url: resolvePath('') },
+    { name: `#${tagName}`, url: resolvePath(`tag/${slug}/`) },
   ]}
 >
   <ReelFeed

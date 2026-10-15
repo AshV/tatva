@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
-import { slugifyQuote, CHUNK_SIZE, seededShuffle } from 'wiz-theme';
+import { slugifyQuote, CHUNK_SIZE, seededShuffle } from 'wisdom';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const rawQuotes = await getCollection('quotes');

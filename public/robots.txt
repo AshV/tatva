@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /tatva/
-
-Sitemap: https://www.ashishvishwakarma.com/tatva/sitemap-index.xml

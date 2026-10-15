@@ -2,7 +2,7 @@
 /**
  * मनोभाव पृष्ठ (Mood Feed) — तत्त्व
  */
-import { BaseLayout, ReelFeed, getLocalizedMoodMeta, allMoods } from 'wiz-theme';
+import { BaseLayout, ReelFeed, getLocalizedMoodMeta, allMoods, resolvePath } from 'wisdom';
 import { getCollection } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 
@@ -42,8 +42,8 @@ const { quotes, matchedCount, moodLabel, moodEmoji } = Astro.props;
   lang="hi"
   keywords={[`${moodLabel} विचार`, moodLabel, 'तत्त्व', 'मनोभाव', 'ध्यान', 'शाश्वत चिंतन']}
   breadcrumbs={[
-    { name: 'मनोभाव', url: '/tatva/' },
-    { name: `${moodEmoji} ${moodLabel}`, url: `/tatva/mood/${slug}/` },
+    { name: 'मनोभाव', url: resolvePath('') },
+    { name: `${moodEmoji} ${moodLabel}`, url: resolvePath(`mood/${slug}/`) },
   ]}
 >
   <ReelFeed

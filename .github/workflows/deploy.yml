@@ -28,21 +28,21 @@ jobs:
         with:
           path: tatva
 
-      - name: Checkout Theme (wiz-theme)
+      - name: Checkout Theme (wisdom)
         uses: actions/checkout@v4
         with:
-          repository: AshV/wiz-theme
-          path: wiz-theme
+          repository: AshV/wisdom
+          path: wisdom
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           cache-dependency-path: tatva/package-lock.json
 
       - name: Install theme dependencies
-        working-directory: wiz-theme
+        working-directory: wisdom
         run: npm ci
 
       - name: Install site dependencies
