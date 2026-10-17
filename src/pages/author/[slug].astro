@@ -4,7 +4,7 @@
  */
 import { BaseLayout, ReelFeed, resolvePath, resolveCanonicalUrl } from 'wisdom';
 import { getCollection } from 'astro:content';
-import { getAuthorProfile } from '../../data/authorProfiles';
+import { getAuthorProfile } from 'wisdom';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths: GetStaticPaths = async () => {

@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
-import { authorProfiles, getAuthorProfile } from '../../../data/authorProfiles';
+import { loadAuthorProfiles, getAuthorProfile } from 'wisdom';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const allQuotes = await getCollection('quotes');
@@ -13,6 +13,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     if (!authorNames[slug]) authorNames[slug] = q.data.author;
   });
 
+  const authorProfiles = loadAuthorProfiles();
   const allSlugs = [...new Set([...Object.keys(authorProfiles), ...Object.keys(authorCounts)])];
 
   return allSlugs.map((slug) => {
