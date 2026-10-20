@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate:videos": "wisdom --url http://localhost:4321/tatva/",
+    "status:videos": "wisdom --url http://localhost:4321/tatva/ --status"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
