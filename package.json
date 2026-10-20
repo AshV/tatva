@@ -10,10 +10,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate:videos": "wisdom --url http://localhost:4321/tatva/",
-    "status:videos": "wisdom --url http://localhost:4321/tatva/ --status",
-    "publish:social": "wisdom publish --all",
-    "status:social": "wisdom publish --status"
+    "generate:videos": "node ../wisdom-studio/bin/generate.js --site tatva",
+    "status:videos": "node ../wisdom-studio/bin/generate.js --site tatva --status",
+    "publish:social": "node ../wisdom-studio/bin/publish.js --site tatva --all",
+    "status:social": "node ../wisdom-studio/bin/publish.js --site tatva --status"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
